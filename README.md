@@ -11,7 +11,7 @@ El archivo `funciones.js` contiene 5 pequeñas herramientas (funciones) diseñad
 1. **`calcularDescuento(precio, porcentaje)`**: Toma un precio inicial y le aplica un porcentaje de descuento. Si el porcentaje es menor a 0 o mayor a 100, muestra un error. Si todo está bien, devuelve el precio final a pagar.
 2. **`validarPassword(password)`**: Verifica si una contraseña es segura. Sus reglas son: no tener espacios en blanco, tener al menos 8 caracteres de largo y contener por lo menos un número.
 3. **`celsiusAFahrenheit(celsius)`**: Recibe una temperatura en grados Celsius y la convierte matemáticamente a grados Fahrenheit.
-4. **`esMayorDeEdad(edad)`**: Revisa si la edad introducida es igual o mayor a 18 (devolviendo verdadero o falso). Además, incluye un seguro: si le envías algo que no sea un número (como texto), hace explotar la función lanzando un error intencional.
+4. **`esMayorDeEdad(edad)`**: Revisa si la edad introducida es igual o mayor a 18 (devolviendo verdadero o falso). Además, incluye un seguro: si le envías algo que no sea un número (como texto), interrumpe la ejecución lanzando un error intencional.
 5. **`generarNombreCompleto(nombre, apellido)`**: Toma un nombre y un apellido y los une en una sola frase. Si alguno de los dos campos está vacío, detiene el programa lanzando un error.
 
 ---
@@ -19,16 +19,17 @@ El archivo `funciones.js` contiene 5 pequeñas herramientas (funciones) diseñad
 ## 2. ¿Qué valida cada prueba?
 
 Usamos **Jest** para someter a nuestras funciones a diferentes escenarios. Las pruebas validan el comportamiento utilizando los siguientes métodos:
+
 * **`.toBe(valor)`**: Valida que la función devuelva exactamente el número o texto esperado.
-* **`.toBeTruthy()`**: Valida que la función devuelva un valor "verdadero" (true). Lo usamos para contraseñas correctas o mayores de edad.
-* **`.toBeFalsy()`**: Valida que la función devuelva un valor "falso" (false). Lo usamos para contraseñas inválidas o menores de edad.
-* **`.toThrow()`**: Valida que la función atrape datos inválidos y genere una "Excepción / Error" para proteger el sistema.
+* **`.toBeTruthy()`**: Valida que la función devuelva un valor "verdadero" (`true`). Lo usamos para contraseñas correctas o confirmación de mayoría de edad.
+* **`.toBeFalsy()`**: Valida que la función devuelva un valor "falso" (`false`). Lo usamos para contraseñas inválidas o minoría de edad.
+* **`.toThrow()`**: Valida que la función atrape datos inválidos y genere una excepción/error para proteger el sistema.
 
 ---
 
-## 3, 4 y 5. Tabla de Casos de Prueba y Resultados
+## 3. Tabla de Casos de Prueba y Resultados
 
-A continuación, se detallan los escenarios a los que sometimos nuestro código. 
+A continuación, se detallan los escenarios a los que sometimos nuestro código.
 
 *Nota: Todas las pruebas listadas pasaron exitosamente (`✓`) según los resultados obtenidos en la consola.*
 
@@ -60,17 +61,17 @@ A continuación, se detallan los escenarios a los que sometimos nuestro código.
 
 ---
 
-## 6. Problemas encontrados durante el desarrollo
+## 4. Problemas encontrados durante el desarrollo
 
 Durante la creación de este código y sus pruebas, nos enfrentamos a desafíos normales del desarrollo de software (TDD):
 
 1. **Captura de errores (`toThrow`)**: Al principio, las pruebas que esperaban un error fallaban porque llamábamos a la función directamente en el `expect()`. Aprendimos que Jest requiere envolver estas llamadas dentro de una función anónima o función flecha `() => { ... }` para poder atrapar el error sin que el programa se rompa prematuramente.
-2. **Validación de reglas de negocio faltantes**: Nos topamos con el error *"Received function did not throw"*. Esto significaba que nuestras pruebas estaban bien, pero a las funciones (`esMayorDeEdad` y `generarNombreCompleto`) les faltaba el código interno (`throw new Error`) para rechazar los datos malos. Hubo que agregarlo.
-3. **Las Expresiones Regulares (Regex)**: Tuvimos que ajustar la lógica de la contraseña. Inicialmente las contraseñas con espacios pasaban como válidas porque la expresión regular (`/^(?=.*\d).{8,}$/`) solo exigía números y longitud, pero no prohibía los espacios. Lo solucionamos agregando un validador manual `.includes(" ")` para rechazar los espacios antes de aplicar la Regex.
-4. **Coherencia en los títulos**: Se presentaron desajustes entre lo que describía el texto de la prueba y lo que el código realmente ejecutaba (ej. describir Kelvin o Fahrenheit, pero ejecutar funciones de Celsius).
+2. **Validación de reglas de negocio faltantes**: Nos topamos con el error *"Received function did not throw"*. Esto significaba que nuestras pruebas estaban bien, pero a las funciones (`esMayorDeEdad` y `generarNombreCompleto`) les faltaba el código interno (`throw new Error`) para rechazar los datos no válidos. Hubo que agregarlo.
+3. **Las Expresiones Regulares (Regex)**: Tuvimos que ajustar la lógica de la contraseña. Inicialmente, las contraseñas con espacios pasaban como válidas porque la expresión regular (`/^(?=.*\d).{8,}$/`) solo exigía números y longitud, pero no prohibía los espacios. Lo solucionamos agregando un validador manual `.includes(" ")` para rechazar los espacios antes de aplicar la Regex.
+4. **Coherencia en los títulos**: Se presentaron desajustes entre lo que describía el texto de la prueba y lo que el código realmente ejecutaba (por ejemplo, describir Kelvin o Fahrenheit, pero ejecutar funciones de Celsius).
 
 ---
 
-## 7. Conclusión
+## 5. Conclusión
 
-Este proyecto demuestra que escribir código no se trata solo de hacer que una función sume o concatene valores, sino de prever **qué pasa cuando el usuario introduce datos incorrectos**. A través de Jest y la metodología de desarrollo guiado por pruebas, logramos construir 5 funciones robustas que no solo hacen su trabajo principal, sino que saben defenderse de espacios en blanco, textos donde deberían ir números y valores vacíos. ¡Todas nuestras pruebas están en verde!
+Este proyecto demuestra que escribir código no se trata solo de hacer que una función sume o concatene valores, sino de prever **qué pasa cuando el usuario introduce datos incorrectos**. A través de Jest y la metodología de desarrollo guiado por pruebas (TDD), logramos construir 5 funciones robustas que no solo cumplen su objetivo principal, sino que están preparadas para gestionar espacios en blanco, tipos de datos incorrectos y cadenas vacías. ¡Todas nuestras pruebas están en verde!
